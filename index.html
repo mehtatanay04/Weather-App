@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="mainContainer">
+    <div class="container">
+      <h2 class="title">Weather App</h2>
+      <input type="text" id="cityInput" placeholder="Enter city name" />
+      <button onclick="getWeather()">Get Weather</button>
+      <div class="box">
+        <div class="weatherInfo" id="weatherInfo">
+          <img src="icon.png" alt="weather icon" class="icon" id="weatherIcon"/>
+          <h3 id="cityName">--</h3>
+          <p id="description">--</p>
+          <p id="temperature">-- °C</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
