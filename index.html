@@ -7,17 +7,25 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="mainContainer">
-    <div class="container">
-      <h2 class="title">Weather App</h2>
-      <input type="text" id="cityInput" placeholder="Enter city name" />
-      <button onclick="getWeather()">Get Weather</button>
-      <div class="box">
-        <div class="weatherInfo" id="weatherInfo">
-          <img src="icon.png" alt="weather icon" class="icon" id="weatherIcon"/>
-          <h3 id="cityName">--</h3>
-          <p id="description">--</p>
-          <p id="temperature">-- °C</p>
+  <div class="main-container">
+    <div class="weather-card">
+      <h2 class="title">🌤️ Weather App</h2>
+
+      <div class="search-box">
+        <input type="text" id="cityInput" placeholder="Enter city name" />
+        <button onclick="getWeather()">Search</button>
+      </div>
+
+      <div class="weather-info" id="weatherInfo">
+        <img id="weatherIcon" src="icon.png" alt="Weather Icon" />
+        <h3 id="cityName">--</h3>
+        <p id="description">--</p>
+
+        <div class="weather-details">
+          <p><strong>🌡️ Temp:</strong> <span id="temperature">-- °C</span></p>
+          <p><strong>🌧️ Precipitation:</strong> <span id="precip">-- mm</span></p>
+          <p><strong>💧 Humidity:</strong> <span id="humidity">-- %</span></p>
+          <p><strong>🌬️ Wind:</strong> <span id="wind">-- km/h</span></p>
         </div>
       </div>
     </div>
