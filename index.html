@@ -2,34 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Weather App</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div class="main-container">
-    <div class="weather-card">
-      <h2 class="title">🌤️ Weather App</h2>
+  <!-- Animated Weather Background -->
+  <div class="weather-background" id="weatherAnimation"></div>
 
-      <div class="search-box">
-        <input type="text" id="cityInput" placeholder="Enter city name" />
-        <button onclick="getWeather()">Search</button>
+  <!-- Moving Clouds -->
+  <div class="clouds">
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+  </div>
+
+  <!-- Weather Card -->
+  <main class="container">
+    <div class="card">
+      <h1 class="title">☁️ Weather Now</h1>
+
+      <div class="search">
+        <div class="search-container">
+          <input type="text" id="cityInput" placeholder="Enter city name..." />
+          <span class="search-icon">🔍</span>
+        </div>
       </div>
 
-      <div class="weather-info" id="weatherInfo">
-        <img id="weatherIcon" src="icon.png" alt="Weather Icon" />
-        <h3 id="cityName">--</h3>
-        <p id="description">--</p>
+      <div class="info">
+        <div class="weather-header">
+          <img id="weatherIcon" src="icon.png" alt="Weather Icon" class="icon" />
+          <div class="weather-title">
+            <h2 id="cityName">City Name</h2>
+            <p id="description">Condition</p>
+          </div>
+        </div>
 
-        <div class="weather-details">
-          <p><strong>🌡️ Temp:</strong> <span id="temperature">-- °C</span></p>
-          <p><strong>🌧️ Precipitation:</strong> <span id="precip">-- mm</span></p>
-          <p><strong>💧 Humidity:</strong> <span id="humidity">-- %</span></p>
-          <p><strong>🌬️ Wind:</strong> <span id="wind">-- km/h</span></p>
+        <div class="details">
+          <div class="detail-item">
+            <span class="label">🌡️ Temperature</span>
+            <span id="temperature">-- °C</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">🌧️ Precipitation</span>
+            <span id="precip">-- mm</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">💧 Humidity</span>
+            <span id="humidity">-- %</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">🌬️ Wind</span>
+            <span id="wind">-- km/h</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 
   <script src="script.js"></script>
 </body>

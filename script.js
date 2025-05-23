@@ -22,7 +22,43 @@ async function getWeather() {
     document.getElementById("humidity").textContent = `${data.current.humidity} %`;
     document.getElementById("wind").textContent = `${data.current.wind_kph} km/h`;
 
+    applyWeatherEffect(data.current.condition.text.toLowerCase());
+
   } catch (err) {
     alert("Error: " + err.message);
   }
 }
+
+function applyWeatherEffect(description) {
+  const animContainer = document.getElementById("weatherAnimation");
+  animContainer.className = "";
+  animContainer.innerHTML = "";
+
+  if (description.includes("rain")) {
+    animContainer.classList.add("rain");
+  } else if (description.includes("sun") || description.includes("clear")) {
+    const sun = document.createElement("div");
+    sun.className = "sun";
+    animContainer.appendChild(sun);
+  } else if (description.includes("snow")) {
+    for (let i = 0; i < 25; i++) {
+      const flake = document.createElement("div");
+      flake.className = "snowflake";
+      flake.textContent = "❄";
+      flake.style.left = Math.random() * 100 + "vw";
+      flake.style.animationDuration = 4 + Math.random() * 3 + "s";
+      flake.style.fontSize = 14 + Math.random() * 8 + "px";
+      animContainer.appendChild(flake);
+    }
+  }
+}
+
+// Add event listener for Enter key to trigger getWeather
+document.getElementById("cityInput").addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+    getWeather();
+  }
+});
+
+// Add event listener for search icon click to trigger getWeather
+document.querySelector(".search-icon").addEventListener("click", getWeather);
