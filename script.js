@@ -5,47 +5,57 @@ const currentDateTime = document.getElementById('currentDateTime');
 const weatherBackground = document.getElementById('weatherBackground');
 
 // Weather API
-const apiKey = 'e73023adc2f24712bb444845252305'; // Replace with your WeatherAPI key
-const unsplashAccessKey = 'cFMxysi6jHLdvjsbZxSgZwXlJ5iS2cD8HtLPkdNcRfU'; // Your Unsplash access key
+const apiKey = 'e73023adc2f24712bb444845252305'; // WeatherAPI key
+const unsplashAccessKey = 'cFMxysi6jHLdvjsbZxSgZwXlJ5iS2cD8HtLPkdNcRfU'; // Unsplash access key
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('App initialized');
   updateDateTime();
   setInterval(updateDateTime, 1000);
   
+  // Set up event listeners
+  searchBtn.addEventListener('click', getWeather);
+  cityInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') getWeather();
+  });
+
   // Try to get user's location automatically
   getLocation();
 });
 
 // Try to get user's geolocation
 function getLocation() {
+  console.log('Requesting location permission...');
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        // If location access granted, get weather by coordinates
+        console.log('Location access granted');
         const { latitude, longitude } = position.coords;
         getWeatherByCoords(latitude, longitude);
       },
       (error) => {
-        // If location access denied, show default message
-        console.log('Location access denied:', error);
-        showAlert('Location access denied. Please search for a city manually.');
-        setDefaultState();
+        console.error('Location access denied:', error);
+        showAlert('Location access denied. Using default location (New York).');
+        // Fallback to New York coordinates
+        getWeatherByCoords(40.7128, -74.0060);
       },
       {
         enableHighAccuracy: true,
-        timeout: 10000, // 10 seconds
+        timeout: 10000,
         maximumAge: 0
       }
     );
   } else {
-    console.log('Geolocation is not supported by this browser.');
-    showAlert('Geolocation is not supported. Please search for a city manually.');
-    setDefaultState();
+    console.error('Geolocation not supported');
+    showAlert('Geolocation not supported. Using default location (New York).');
+    // Fallback to New York coordinates
+    getWeatherByCoords(40.7128, -74.0060);
   }
 }
 
 function setDefaultState() {
+  console.log('Setting default state');
   document.getElementById('cityName').textContent = 'Search for a location';
   document.getElementById('description').textContent = '--';
   document.getElementById('temperature').textContent = '--°';
@@ -54,24 +64,27 @@ function setDefaultState() {
   document.getElementById('precip').textContent = '-- mm';
   document.getElementById('feelsLike').textContent = '--°';
   document.getElementById('weatherIcon').src = 'https://cdn.weatherapi.com/weather/64x64/day/116.png';
-  
-  // Set default background
   weatherBackground.style.backgroundImage = 'linear-gradient(135deg, #4361ee, #3a0ca3)';
 }
 
 // Get weather by coordinates
 async function getWeatherByCoords(lat, lon) {
+  console.log(`Fetching weather for coordinates: ${lat}, ${lon}`);
   showLoading(true);
   const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=3`;
   
   try {
     const response = await fetch(url);
-    if (!response.ok) throw new Error('Location not found');
+    console.log('Weather API response status:', response.status);
+    
+    if (!response.ok) {
+      throw new Error(`Weather API error: ${response.status}`);
+    }
+    
     const data = await response.json();
+    console.log('Weather data received:', data);
     
-    // Update input field with current city name
     cityInput.value = data.location.name;
-    
     updateCurrentWeather(data);
     updateForecast(data.forecast.forecastday);
     updateWeatherBackground(data.current.condition.text, data.location.name);
@@ -87,6 +100,7 @@ async function getWeatherByCoords(lat, lon) {
 
 // Update weather background based on conditions
 async function updateWeatherBackground(weatherCondition, locationName) {
+  console.log('Updating background for:', weatherCondition);
   const condition = weatherCondition.toLowerCase();
   let query = '';
   
@@ -105,23 +119,56 @@ async function updateWeatherBackground(weatherCondition, locationName) {
   } else {
     query = `${locationName}+landscape`;
   }
-  
-  // Use Unsplash API for real backgrounds
+
   try {
+    console.log('Fetching background image from Unsplash...');
     const unsplashUrl = `https://api.unsplash.com/photos/random?query=${query}&client_id=${unsplashAccessKey}&orientation=landscape`;
     const response = await fetch(unsplashUrl);
+    
+    if (!response.ok) {
+      throw new Error(`Unsplash API error: ${response.status}`);
+    }
+    
     const data = await response.json();
-    weatherBackground.style.backgroundImage = `url(${data.urls.regular})`;
+    console.log('Unsplash data received');
+    
+    if (data.urls && data.urls.regular) {
+      weatherBackground.style.backgroundImage = `url(${data.urls.regular})`;
+      console.log('Background image set successfully');
+    } else {
+      throw new Error('No image available from Unsplash');
+    }
   } catch (error) {
     console.error('Error fetching background:', error);
-    // Fallback to default gradient
-    weatherBackground.style.backgroundImage = 'linear-gradient(135deg, #4361ee, #3a0ca3)';
+    setWeatherBasedGradient(condition);
   }
+}
+
+function setWeatherBasedGradient(condition) {
+  console.log('Setting weather-based gradient');
+  let gradient = 'linear-gradient(135deg, #4361ee, #3a0ca3)'; // default
+  
+  if (condition.includes('rain')) {
+    gradient = 'linear-gradient(135deg, #4b6cb7, #182848)';
+  } else if (condition.includes('sun') || condition.includes('clear')) {
+    gradient = 'linear-gradient(135deg, #f46b45, #eea849)';
+  } else if (condition.includes('cloud')) {
+    gradient = 'linear-gradient(135deg, #757f9a, #d7dde8)';
+  } else if (condition.includes('snow')) {
+    gradient = 'linear-gradient(135deg, #e6dada, #274046)';
+  } else if (condition.includes('storm')) {
+    gradient = 'linear-gradient(135deg, #0f2027, #203a43, #2c5364)';
+  } else if (condition.includes('fog') || condition.includes('mist')) {
+    gradient = 'linear-gradient(135deg, #606c88, #3f4c6b)';
+  }
+  
+  weatherBackground.style.backgroundImage = gradient;
 }
 
 // Update current weather display
 function updateCurrentWeather(data) {
-  const { current, location } = data;
+  console.log('Updating current weather display');
+  const { current, location, forecast } = data;
   
   document.getElementById('cityName').textContent = `${location.name}, ${location.country}`;
   document.getElementById('description').textContent = current.condition.text;
@@ -129,12 +176,17 @@ function updateCurrentWeather(data) {
   document.getElementById('temperature').textContent = `${Math.round(current.temp_c)}°`;
   document.getElementById('humidity').textContent = `${current.humidity}%`;
   document.getElementById('wind').textContent = `${current.wind_kph} km/h`;
-  document.getElementById('precip').textContent = `${current.precip_mm} mm`;
+  
+  // Use today's total precipitation instead of current precipitation
+  const todaysPrecip = forecast.forecastday[0].day.totalprecip_mm;
+  document.getElementById('precip').textContent = `${Math.max(todaysPrecip, current.precip_mm)} mm`;
+  
   document.getElementById('feelsLike').textContent = `${Math.round(current.feelslike_c)}°`;
 }
 
 // Update forecast display
 function updateForecast(forecastDays) {
+  console.log('Updating forecast display');
   const forecastContainer = document.getElementById('forecastContainer');
   forecastContainer.innerHTML = `
     <div class="forecast-title">
@@ -168,6 +220,7 @@ function updateForecast(forecastDays) {
 
 // Show loading state
 function showLoading(isLoading) {
+  console.log(isLoading ? 'Showing loading state' : 'Hiding loading state');
   const card = document.querySelector('.card');
   if (isLoading) {
     card.classList.add('loading');
@@ -178,6 +231,7 @@ function showLoading(isLoading) {
 
 // Show alert message
 function showAlert(message) {
+  console.log('Showing alert:', message);
   const alert = document.createElement('div');
   alert.className = 'alert-message';
   alert.textContent = message;
@@ -196,13 +250,20 @@ async function getWeather() {
     return;
   }
 
+  console.log(`Fetching weather for city: ${city}`);
   showLoading(true);
   const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=3`;
 
   try {
     const response = await fetch(url);
-    if (!response.ok) throw new Error('City not found');
+    console.log('Weather API response status:', response.status);
+    
+    if (!response.ok) {
+      throw new Error(`Weather API error: ${response.status}`);
+    }
+    
     const data = await response.json();
+    console.log('Weather data received:', data);
     
     updateCurrentWeather(data);
     updateForecast(data.forecast.forecastday);
@@ -210,7 +271,7 @@ async function getWeather() {
     
   } catch (error) {
     console.error('Error fetching weather:', error);
-    showAlert('Error: ' + error.message);
+    showAlert('Error: City not found. Please try another location.');
     setDefaultState();
   } finally {
     showLoading(false);
@@ -230,9 +291,3 @@ function updateDateTime() {
   };
   currentDateTime.textContent = now.toLocaleDateString('en-US', options);
 }
-
-// Event listeners
-searchBtn.addEventListener('click', getWeather);
-cityInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') getWeather();
-});
