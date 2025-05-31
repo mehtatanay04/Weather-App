@@ -9,15 +9,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
-  <!-- Animated Weather Background -->
-  <div class="weather-background" id="weatherAnimation"></div>
-
-  <!-- Moving Clouds -->
-  <div class="clouds">
-    <div class="cloud cloud1"></div>
-    <div class="cloud cloud2"></div>
-    <div class="cloud cloud3"></div>
-  </div>
+  <!-- Dynamic Weather Background -->
+  <div class="weather-background" id="weatherBackground"></div>
 
   <!-- Weather Card -->
   <main class="container">
@@ -90,11 +83,8 @@
         </div>
       </div>
 
-      <div class="forecast-container">
-        <h3 class="forecast-title"><i class="fas fa-calendar-alt"></i> 3-Day Forecast</h3>
-        <div class="forecast-items" id="forecastContainer">
-          <!-- Forecast items will be added here dynamically -->
-        </div>
+      <div class="forecast-container" id="forecastContainer">
+        <!-- Forecast items will be added here dynamically -->
       </div>
     </div>
   </main>

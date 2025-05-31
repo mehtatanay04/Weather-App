@@ -2,11 +2,11 @@
 const cityInput = document.getElementById('cityInput');
 const searchBtn = document.getElementById('searchBtn');
 const currentDateTime = document.getElementById('currentDateTime');
-const forecastContainer = document.getElementById('forecastContainer');
-const weatherAnimation = document.getElementById('weatherAnimation');
+const weatherBackground = document.getElementById('weatherBackground');
 
 // Weather API
-const apiKey = 'e73023adc2f24712bb444845252305'; // Your WeatherAPI key
+const apiKey = 'e73023adc2f24712bb444845252305'; // Replace with your WeatherAPI key
+const unsplashAccessKey = 'cFMxysi6jHLdvjsbZxSgZwXlJ5iS2cD8HtLPkdNcRfU'; // Your Unsplash access key
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
@@ -54,6 +54,9 @@ function setDefaultState() {
   document.getElementById('precip').textContent = '-- mm';
   document.getElementById('feelsLike').textContent = '--°';
   document.getElementById('weatherIcon').src = 'https://cdn.weatherapi.com/weather/64x64/day/116.png';
+  
+  // Set default background
+  weatherBackground.style.backgroundImage = 'linear-gradient(135deg, #4361ee, #3a0ca3)';
 }
 
 // Get weather by coordinates
@@ -71,7 +74,7 @@ async function getWeatherByCoords(lat, lon) {
     
     updateCurrentWeather(data);
     updateForecast(data.forecast.forecastday);
-    applyWeatherEffect(data.current.condition.text.toLowerCase());
+    updateWeatherBackground(data.current.condition.text, data.location.name);
     
   } catch (error) {
     console.error('Error fetching weather:', error);
@@ -79,6 +82,40 @@ async function getWeatherByCoords(lat, lon) {
     setDefaultState();
   } finally {
     showLoading(false);
+  }
+}
+
+// Update weather background based on conditions
+async function updateWeatherBackground(weatherCondition, locationName) {
+  const condition = weatherCondition.toLowerCase();
+  let query = '';
+  
+  if (condition.includes('rain')) {
+    query = 'rainy+weather';
+  } else if (condition.includes('sun') || condition.includes('clear')) {
+    query = 'sunny+weather';
+  } else if (condition.includes('cloud')) {
+    query = 'cloudy+weather';
+  } else if (condition.includes('snow')) {
+    query = 'snow+weather';
+  } else if (condition.includes('storm')) {
+    query = 'storm+weather';
+  } else if (condition.includes('fog') || condition.includes('mist')) {
+    query = 'foggy+weather';
+  } else {
+    query = `${locationName}+landscape`;
+  }
+  
+  // Use Unsplash API for real backgrounds
+  try {
+    const unsplashUrl = `https://api.unsplash.com/photos/random?query=${query}&client_id=${unsplashAccessKey}&orientation=landscape`;
+    const response = await fetch(unsplashUrl);
+    const data = await response.json();
+    weatherBackground.style.backgroundImage = `url(${data.urls.regular})`;
+  } catch (error) {
+    console.error('Error fetching background:', error);
+    // Fallback to default gradient
+    weatherBackground.style.backgroundImage = 'linear-gradient(135deg, #4361ee, #3a0ca3)';
   }
 }
 
@@ -94,6 +131,39 @@ function updateCurrentWeather(data) {
   document.getElementById('wind').textContent = `${current.wind_kph} km/h`;
   document.getElementById('precip').textContent = `${current.precip_mm} mm`;
   document.getElementById('feelsLike').textContent = `${Math.round(current.feelslike_c)}°`;
+}
+
+// Update forecast display
+function updateForecast(forecastDays) {
+  const forecastContainer = document.getElementById('forecastContainer');
+  forecastContainer.innerHTML = `
+    <div class="forecast-title">
+      <i class="fas fa-calendar-alt"></i> 3-Day Forecast
+    </div>
+    <div class="forecast-items"></div>
+  `;
+  
+  const forecastItems = forecastContainer.querySelector('.forecast-items');
+  
+  forecastDays.forEach(day => {
+    const date = new Date(day.date);
+    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+    const maxTemp = Math.round(day.day.maxtemp_c);
+    const minTemp = Math.round(day.day.mintemp_c);
+    
+    const forecastItem = document.createElement('div');
+    forecastItem.className = 'forecast-item';
+    forecastItem.innerHTML = `
+      <div class="forecast-day">${dayName}</div>
+      <img class="forecast-icon" src="https:${day.day.condition.icon}" alt="${day.day.condition.text}">
+      <div class="forecast-temp">
+        <span class="forecast-temp-max">${maxTemp}°</span>
+        <span class="forecast-temp-min">${minTemp}°</span>
+      </div>
+    `;
+    
+    forecastItems.appendChild(forecastItem);
+  });
 }
 
 // Show loading state
@@ -136,7 +206,7 @@ async function getWeather() {
     
     updateCurrentWeather(data);
     updateForecast(data.forecast.forecastday);
-    applyWeatherEffect(data.current.condition.text.toLowerCase());
+    updateWeatherBackground(data.current.condition.text, data.location.name);
     
   } catch (error) {
     console.error('Error fetching weather:', error);
@@ -159,88 +229,6 @@ function updateDateTime() {
     minute: '2-digit'
   };
   currentDateTime.textContent = now.toLocaleDateString('en-US', options);
-}
-
-// Update forecast display
-function updateForecast(forecastDays) {
-  forecastContainer.innerHTML = '';
-  
-  forecastDays.forEach(day => {
-    const date = new Date(day.date);
-    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
-    const maxTemp = Math.round(day.day.maxtemp_c);
-    const minTemp = Math.round(day.day.mintemp_c);
-    const iconUrl = 'https:' + day.day.condition.icon;
-    
-    const forecastItem = document.createElement('div');
-    forecastItem.className = 'forecast-item';
-    forecastItem.innerHTML = `
-      <div class="forecast-day">${dayName}</div>
-      <img src="${iconUrl}" alt="${day.day.condition.text}" class="forecast-icon" />
-      <div class="forecast-temp">
-        <span class="forecast-temp-max">${maxTemp}°</span>
-        <span class="forecast-temp-min">${minTemp}°</span>
-      </div>
-    `;
-    
-    forecastContainer.appendChild(forecastItem);
-  });
-}
-
-// Apply weather effects based on current conditions
-function applyWeatherEffect(condition) {
-  // Clear any existing effects
-  weatherAnimation.innerHTML = '';
-  weatherAnimation.className = 'weather-background';
-  
-  // Add appropriate effect based on condition
-  if (condition.includes('sun') || condition.includes('clear')) {
-    weatherAnimation.classList.add('sunny');
-    const sun = document.createElement('div');
-    sun.className = 'sun';
-    weatherAnimation.appendChild(sun);
-  } else if (condition.includes('rain') || condition.includes('drizzle')) {
-    weatherAnimation.classList.add('rain');
-    weatherAnimation.innerHTML = '<div class="rain-effect"></div>';
-    createRaindrops();
-  } else if (condition.includes('snow') || condition.includes('sleet')) {
-    weatherAnimation.classList.add('snow');
-    createSnowflakes();
-  } else if (condition.includes('cloud') || condition.includes('overcast')) {
-    weatherAnimation.classList.add('cloudy');
-  }
-}
-
-// Create raindrops effect
-function createRaindrops() {
-  const rainContainer = document.createElement('div');
-  rainContainer.className = 'rain-container';
-  
-  for (let i = 0; i < 50; i++) {
-    const raindrop = document.createElement('div');
-    raindrop.className = 'raindrop';
-    raindrop.style.left = `${Math.random() * 100}%`;
-    raindrop.style.animationDuration = `${0.5 + Math.random() * 0.5}s`;
-    raindrop.style.animationDelay = `${Math.random() * 0.5}s`;
-    rainContainer.appendChild(raindrop);
-  }
-  
-  weatherAnimation.appendChild(rainContainer);
-}
-
-// Create snowflakes effect
-function createSnowflakes() {
-  for (let i = 0; i < 50; i++) {
-    const snowflake = document.createElement('div');
-    snowflake.className = 'snowflake';
-    snowflake.innerHTML = '❄';
-    snowflake.style.left = `${Math.random() * 100}%`;
-    snowflake.style.animationDuration = `${5 + Math.random() * 10}s`;
-    snowflake.style.animationDelay = `${Math.random() * 5}s`;
-    snowflake.style.opacity = Math.random();
-    snowflake.style.fontSize = `${10 + Math.random() * 10}px`;
-    weatherAnimation.appendChild(snowflake);
-  }
 }
 
 // Event listeners
