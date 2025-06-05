@@ -1,94 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weather Forecast</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherSphere</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <!-- Dynamic Weather Background -->
-  <div class="weather-background" id="weatherBackground"></div>
-
-  <!-- Weather Card -->
-  <main class="container">
-    <div class="card">
-      <div class="card-header">
-        <h1 class="title">
-          <i class="fas fa-cloud-sun"></i> Weather Forecast
-        </h1>
-        <div class="date-time" id="currentDateTime"></div>
-      </div>
-
-      <div class="search">
-        <div class="search-container">
-          <input type="text" id="cityInput" placeholder="Search for a city..." />
-          <button class="search-btn" id="searchBtn">
-            <i class="fas fa-search"></i>
-          </button>
+<body class="loading">
+    <div class="container">
+        <div class="header">
+            <div class="location">
+                <i class="fas fa-map-marker-alt"></i>
+                <div class="location-info">
+                    <h2 id="city" class="skeleton"></h2>
+                    <p id="date" class="skeleton"></p>
+                </div>
+            </div>
+            <button class="search-btn" id="searchBtn">
+                <i class="fas fa-search"></i>
+            </button>
         </div>
-      </div>
 
-      <div class="weather-display">
         <div class="current-weather">
-          <div class="weather-icon-container">
-            <img id="weatherIcon" src="https://cdn.weatherapi.com/weather/64x64/day/116.png" alt="Weather Icon" class="icon" />
-            <div class="temperature" id="temperature">--°</div>
-          </div>
-          <div class="weather-info">
-            <h2 id="cityName">Search for a location</h2>
-            <p id="description">--</p>
-          </div>
+            <div class="weather-icon skeleton" id="weatherIcon"></div>
+            <div class="temperature skeleton" id="temperature"></div>
+            <div class="weather-description skeleton" id="weatherDescription"></div>
+            <div class="high-low">
+                <span id="highTemp" class="skeleton"></span>
+                <span id="lowTemp" class="skeleton"></span>
+            </div>
         </div>
 
         <div class="weather-details">
-          <div class="detail-card">
-            <div class="detail-icon">
-              <i class="fas fa-tint"></i>
-            </div>
-            <div class="detail-info">
-              <span class="detail-label">Humidity</span>
-              <span id="humidity">--%</span>
-            </div>
-          </div>
-          <div class="detail-card">
-            <div class="detail-icon">
-              <i class="fas fa-wind"></i>
-            </div>
-            <div class="detail-info">
-              <span class="detail-label">Wind</span>
-              <span id="wind">-- km/h</span>
-            </div>
-          </div>
-          <div class="detail-card">
-            <div class="detail-icon">
-              <i class="fas fa-cloud-rain"></i>
-            </div>
-            <div class="detail-info">
-              <span class="detail-label">Precip</span>
-              <span id="precip">-- mm</span>
-            </div>
-          </div>
-          <div class="detail-card">
-            <div class="detail-icon">
-              <i class="fas fa-temperature-low"></i>
-            </div>
-            <div class="detail-info">
-              <span class="detail-label">Feels Like</span>
-              <span id="feelsLike">--°</span>
-            </div>
-          </div>
+            <div class="detail-card skeleton"></div>
+            <div class="detail-card skeleton"></div>
+            <div class="detail-card skeleton"></div>
         </div>
-      </div>
 
-      <div class="forecast-container" id="forecastContainer">
-        <!-- Forecast items will be added here dynamically -->
-      </div>
+        <div class="forecast-section">
+            <h3 class="section-title">
+                <i class="fas fa-clock"></i> Hourly Forecast
+            </h3>
+            <div class="hourly-forecast" id="hourlyForecast">
+                <div class="hourly-card skeleton"></div>
+                <div class="hourly-card skeleton"></div>
+                <div class="hourly-card skeleton"></div>
+                <div class="hourly-card skeleton"></div>
+            </div>
+        </div>
+
+        <div class="forecast-section">
+            <h3 class="section-title">
+                <i class="fas fa-calendar-alt"></i> Daily Forecast
+            </h3>
+            <div class="daily-forecast" id="dailyForecast">
+                <div class="daily-card skeleton"></div>
+                <div class="daily-card skeleton"></div>
+                <div class="daily-card skeleton"></div>
+            </div>
+        </div>
     </div>
-  </main>
 
-  <script src="script.js"></script>
+    <div class="search-modal" id="searchModal">
+        <div class="search-container">
+            <button class="close-btn" id="closeSearch">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3>Search Location</h3>
+            <div class="search-input">
+                <input type="text" id="searchInput" placeholder="Enter city name...">
+                <button id="searchSubmit">Search</button>
+            </div>
+            <div class="search-results" id="searchResults">
+                <!-- Search results will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
