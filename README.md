@@ -1,50 +1,42 @@
-# Weather Forecast App
+# WeatherSphere 🌤️  
+Modern weather forecasting at your fingertips  
 
-![Weather App Screenshot](screenshot.png)
+WeatherSphere is a sleek, responsive web application that delivers real-time weather updates using the WeatherAPI. It provides current conditions, hourly forecasts, and a 7-day outlook, all displayed in Celsius. With dynamic backgrounds, skeleton loading states, and smooth animations, WeatherSphere offers an engaging user experience.
 
-A beautiful, responsive weather application that displays current weather conditions and a 3-day forecast using the WeatherAPI.com service.
+## ✨ Features  
 
-🔗 **Live Demo**: [weather-app.vercel.app](https://weather-app-git-main-tanay-mehtas-projects-35779685.vercel.app/)  
-📦 **GitHub Repository**: [github.com/mehtatanay04/Weather-App](https://github.com/mehtatanay04/Weather-App/)
+- **Current Weather**: View temperature, condition, high/low, feels-like, humidity, and wind speed.  
+- **Hourly Forecast**: 12-hour forecast with temperature and weather icons.  
+- **Daily Forecast**: 7-day forecast with high/low temperatures.  
+- **Location Search**: Search cities with WeatherAPI's autocomplete.  
+- **Geolocation**: Auto-detects user location (with permission).  
+- **Responsive Design**: Optimized for desktop, tablet, and mobile.  
+- **Dynamic Backgrounds**: Gradients change based on weather and day/night.  
+- **Skeleton Loading**: Smooth placeholders during data fetch.  
+- **Fade-in Animations**: Content loads with elegant transitions.  
 
----
+## 🛠️ Technologies  
 
-## 🌟 Features
+| Technology       | Purpose                     | Source                          |
+|------------------|-----------------------------|---------------------------------|
+| HTML5            | Structure                   |                                 |
+| CSS3             | Styling & Animations        |                                 |
+| JavaScript       | Logic & API Integration     |                                 |
+| WeatherAPI       | Weather Data                | [WeatherAPI](https://www.weatherapi.com/) |
+| Font Awesome     | Icons                       | [Font Awesome](https://fontawesome.com/) |
+| Google Fonts     | Poppins Font                | [Google Fonts](https://fonts.google.com/) |
 
-- 🌦️ Real-time weather data for any location  
-- 📍 Automatic location detection (with permission)  
-- 🔍 City search functionality  
-- 📅 3-day weather forecast  
-- 🌈 Dynamic weather animations (sun, rain, snow)  
-- 📱 Fully responsive design  
-- ⏰ Current date and time display  
-- 🔄 Loading states and error handling  
+## 🚀 Setup  
 
----
+### 📂 Project Files  
+Ensure these files are present:  
+- `index.html` - Application structure  
+- `styles.css` - Styling and animations  
+- `script.js` - JavaScript logic  
+- `README.md` - This documentation  
 
-## 🛠️ Technologies Used
-
-- HTML5  
-- CSS3 (with CSS Variables)  
-- JavaScript (ES6)  
-- [WeatherAPI.com](https://www.weatherapi.com/) (weather data)  
-- Google Fonts (Poppins)  
-- Font Awesome (icons)  
-
----
-
-## 🚀 Live Application
-
-You can try the live version here:  
-👉 **[weather-app.vercel.app](https://weather-app-git-main-tanay-mehtas-projects-35779685.vercel.app/)**
-
----
-
-## 📥 How to Clone and Use This Project
-
-To use this app with your own WeatherAPI key:
-
-1. **Clone the repository**  
-   ```bash
-   git clone https://github.com/mehtatanay04/Weather-App.git
-   cd Weather-App
+### 🔑 Get a WeatherAPI Key  
+1. Sign up at [WeatherAPI](https://www.weatherapi.com/)  
+2. Replace the placeholder in `script.js`:  
+   ```javascript
+   const API_KEY = 'your_actual_api_key_here';
