@@ -169,10 +169,10 @@ function updateCurrentWeather(data) {
     });
     
     // Update current weather
-    temperatureElement.textContent = Math.round(current.temp_f);
+    temperatureElement.textContent = Math.round(current.temp_c);
     weatherDescription.textContent = current.condition.text;
-    highTempElement.textContent = `H:${Math.round(data.forecast.forecastday[0].day.maxtemp_f)}°`;
-    lowTempElement.textContent = `L:${Math.round(data.forecast.forecastday[0].day.mintemp_f)}°`;
+    highTempElement.textContent = `H:${Math.round(data.forecast.forecastday[0].day.maxtemp_c)}°`;
+    lowTempElement.textContent = `L:${Math.round(data.forecast.forecastday[0].day.mintemp_c)}°`;
     
     // Update weather icon
     const iconClass = getWeatherIconClass(current.condition.code, current.is_day);
@@ -228,7 +228,7 @@ function updateHourlyForecast(data) {
         hourCard.innerHTML = `
             <div class="time">${i === 0 ? 'Now' : timeString}</div>
             <div class="hourly-icon"><i class="fas ${iconClass}"></i></div>
-            <div class="hourly-temp">${Math.round(hour.temp_f)}°</div>
+            <div class="hourly-temp">${Math.round(hour.temp_c)}°</div>
         `;
         
         hourlyForecast.appendChild(hourCard);
@@ -253,8 +253,8 @@ function updateDailyForecast(data) {
             <div class="day">${dayName}</div>
             <div class="daily-icon"><i class="fas ${iconClass}"></i></div>
             <div class="temps">
-                <div class="high">${Math.round(day.day.maxtemp_f)}°</div>
-                <div class="low">${Math.round(day.day.mintemp_f)}°</div>
+                <div class="high">${Math.round(day.day.maxtemp_c)}°</div>
+                <div class="low">${Math.round(day.day.mintemp_c)}°</div>
             </div>
         `;
         
