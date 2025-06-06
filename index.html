@@ -6,10 +6,14 @@
     <title>WeatherSphere</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="loading">
-    <div class="container">
+    <div class="loader" id="loader">
+        <i class="fas fa-cloud fa-spin"></i>
+    </div>
+    <div class="container shadow-box">
         <div class="header">
             <div class="location">
                 <i class="fas fa-map-marker-alt"></i>
@@ -18,9 +22,28 @@
                     <p id="date" class="skeleton"></p>
                 </div>
             </div>
-            <button class="search-btn" id="searchBtn">
-                <i class="fas fa-search"></i>
-            </button>
+            <div class="header-controls">
+                <label class="unit-toggle">
+                    <input type="checkbox" id="unitToggle">
+                    <span class="slider">°C / °F</span>
+                </label>
+                <button class="theme-btn" id="themeBtn" aria-label="Toggle light/dark theme">
+                    <i class="fas fa-adjust"></i>
+                </button>
+                <button class="current-location-btn" id="currentLocationBtn" aria-label="Get current location weather" title="Get Current Location">
+                    <i class="fas fa-location-arrow"></i>
+                </button>
+                <button class="search-btn" id="searchBtn" aria-label="Search for a city">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="alerts-section" id="alertsSection" style="display: none;">
+            <h3 class="section-title">
+                <i class="fas fa-exclamation-triangle"></i> Weather Alerts
+            </h3>
+            <div class="alerts" id="alerts"></div>
         </div>
 
         <div class="current-weather">
@@ -37,6 +60,14 @@
             <div class="detail-card skeleton"></div>
             <div class="detail-card skeleton"></div>
             <div class="detail-card skeleton"></div>
+            <div class="detail-card skeleton"></div>
+        </div>
+
+        <div class="map-section">
+            <h3 class="section-title">
+                <i class="fas fa-map"></i> Weather Map
+            </h3>
+            <div id="weatherMap" style="height: 200px;"></div>
         </div>
 
         <div class="forecast-section">
@@ -59,26 +90,37 @@
                 <div class="daily-card skeleton"></div>
                 <div class="daily-card skeleton"></div>
                 <div class="daily-card skeleton"></div>
+                <div class="daily-card skeleton"></div>
+                <div class="daily-card skeleton"></div>
+                <div class="daily-card skeleton"></div>
+                <div class="daily-card skeleton"></div>
             </div>
         </div>
     </div>
 
     <div class="search-modal" id="searchModal">
         <div class="search-container">
-            <button class="close-btn" id="closeSearch">
+            <button class="close-btn" id="closeSearch" aria-label="Close search modal">
                 <i class="fas fa-times"></i>
             </button>
             <h3>Search Location</h3>
             <div class="search-input">
-                <input type="text" id="searchInput" placeholder="Enter city name...">
-                <button id="searchSubmit">Search</button>
+                <input type="text" id="searchInput" placeholder="Enter city name..." aria-label="Enter city name">
+                <button id="searchSubmit" aria-label="Search for location">Search</button>
             </div>
-            <div class="search-results" id="searchResults">
-                <!-- Search results will be inserted here by JavaScript -->
+            <div class="favorites" id="favorites">
+                <h4>Favorite Locations</h4>
+                <div id="favoriteList"></div>
             </div>
+            <div class="recent-searches" id="recentSearches">
+                <h4>Recent Searches</h4>
+                <div id="recentList"></div>
+            </div>
+            <div class="search-results" id="searchResults"></div>
         </div>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
