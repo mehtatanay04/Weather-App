@@ -1,0 +1,9 @@
+Add weather-based backgrounds, default dark mode, AQI labels, and black text for city/date in light mode
+
+- Implemented dynamic weather-based background gradients for both dark and light modes, with distinct palettes for sunny, rainy, cloudy, and night conditions.
+- Set dark mode as the default theme, with user preference saved in localStorage.
+- Enhanced AQI display to show descriptive labels (e.g., "Good", "Moderate") instead of raw indices, with proper color coding and null handling.
+- Changed city and date text color to black in light mode for improved readability.
+- Improved gradient animations and color vibrancy for better visual distinction.
+- Added console logging for background debugging and ensured offline cached data support.
+- Maintained existing features (unit toggle, alerts, map, favorites, recent searches) with no regressions.
